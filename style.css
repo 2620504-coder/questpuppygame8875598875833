@@ -1,0 +1,258 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: #eef2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #333;
+}
+
+.game-container {
+    width: 100%;
+    max-width: 430px;
+    height: 100vh;
+    max-height: 850px;
+    background-color: #ffffff;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+@media (max-width: 430px) {
+    .game-container { height: 100vh; max-height: 100vh; }
+}
+
+/* 토스트 알림 */
+.toast {
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(45, 52, 54, 0.95);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    z-index: 1000;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    white-space: nowrap;
+}
+.toast.show { top: 20px; opacity: 1; }
+
+/* 강아지 상단 섹션 */
+.puppy-section {
+    background-color: #f8fafb;
+    padding: 25px 20px 20px;
+    text-align: center;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.status-bar {
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    color: #4a5568;
+}
+#equipped-title {
+    color: #319795;
+    margin-right: 2px;
+}
+
+/* 강아지 컨테이너 및 사진 크기 조정 */
+.puppy-container {
+    position: relative;
+    width: 170px;
+    margin: 0 auto 15px;
+}
+
+.puppy-box {
+    width: 150px;  /* 🌟 상자 크기 키움 유지 */
+    height: 150px; /* 🌟 상자 크기 키움 유지 */
+    background-color: #a8e6cf; /* 초기 배경색 */
+    margin: 0 auto;
+    border-radius: 30px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    transition: background-color 0.4s ease, border 0.3s ease, box-shadow 0.3s ease, transform 0.1s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 실제 강아지 이미지 스타일 */
+#puppy-img {
+    width: 90%; /* 상자 안에 꽉 차게 */
+    height: 90%;
+    object-fit: contain; /* 비율 유지하며 맞춤 */
+    pointer-events: none; /* 클릭 이벤트 방해 안함 */
+}
+
+/* 🔥 피버 상태 스타일 (황금빛 폭주 오라) */
+.puppy-box.fever-active {
+    border: 5px solid #ffd700 !important;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.8) !important;
+    animation: feverGlow 1s ease infinite alternate;
+}
+
+.puppy-box.bounce {
+    animation: jelly 0.3s ease;
+}
+
+.fever-badge {
+    display: none;
+    background: linear-gradient(45deg, #ff9472, #f5af19);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 12px;
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+.puppy-box.fever-active + .fever-badge { display: block; }
+
+.speech-bubble {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0,0,0,0.8);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 20;
+}
+.speech-bubble.show { opacity: 1; }
+
+.stats { display: flex; justify-content: space-around; gap: 10px; }
+.stat-box {
+    flex: 1; background-color: #edf2f7; padding: 10px;
+    border-radius: 15px; font-size: 0.85rem; font-weight: bold; color: #4a5568;
+}
+
+/* 콘텐츠 스크롤 영역 */
+.content {
+    flex: 1; padding: 20px;
+    overflow-y: auto; padding-bottom: 95px;
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.2s; }
+
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+h2 { font-size: 1.15rem; color: #2d3748; }
+
+.sudden-btn {
+    background-color: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8;
+    padding: 6px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; cursor: pointer;
+}
+
+.input-group { display: flex; margin-bottom: 20px; }
+#quest-input {
+    flex: 1; padding: 14px; border: 1px solid #e2e8f0;
+    border-radius: 12px 0 0 12px; outline: none; font-size: 0.95rem;
+}
+.input-group button {
+    padding: 0 20px; border: none; background-color: #a8e6cf;
+    font-weight: bold; border-radius: 0 12px 12px 0; font-size: 0.95rem; cursor: pointer;
+}
+
+/* 리스트 스타일 */
+li {
+    display: flex; justify-content: space-between; align-items: center;
+    background-color: #f8fafb; padding: 14px 16px; margin-bottom: 10px;
+    border-radius: 14px; border: 1px solid #edf2f7;
+}
+
+.quest-info { display: flex; flex-direction: column; gap: 4px; max-width: 65%; }
+.quest-title { font-size: 0.95rem; font-weight: 500; word-break: break-all; }
+.quest-reward { font-size: 0.75rem; color: #a0aec0; font-weight: 500; }
+
+li.sudden-quest-item {
+    border: 1.5px dashed #ff8b94;
+    background-color: #fffaf0;
+}
+li.sudden-quest-item .quest-reward { color: #dd6b20; font-weight: bold; }
+
+.quest-btns { display: flex; gap: 6px; }
+.comp-btn { background-color: #ffd3b6; padding: 8px 14px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;}
+.del-btn { background-color: #f7fafc; border: 1px solid #e2e8f0; color: #a0aec0; padding: 8px 10px; border-radius: 8px; cursor: pointer;}
+
+/* 상점 UI */
+.item-info { display: flex; flex-direction: column; max-width: 55%; }
+.item-name { font-weight: bold; font-size: 0.95rem; }
+.item-desc { font-size: 0.75rem; color: #718096; margin-top: 2px; }
+.price { color: #ff8b94; font-weight: bold; font-size: 0.9rem; }
+.buy-btn, .use-btn { padding: 10px 14px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.85rem; }
+.buy-btn { background-color: #ffd3b6; }
+.use-btn { background-color: #d4f0f0; }
+
+/* 칭호 UI */
+.achievement-stats {
+    background-color: #f7fafc; padding: 10px; border-radius: 10px;
+    font-size: 0.85rem; font-weight: bold; margin-bottom: 15px; color: #4a5568;
+}
+.title-item { background-color: #f8fafb; border: 1px solid #edf2f7; opacity: 0.6; }
+.title-item.unlocked { opacity: 1; background-color: #fff; border: 1px solid #e2e8f0; }
+.title-btn { padding: 6px 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.8rem;}
+.title-btn.locked { background-color: #e2e8f0; color: #a0aec0; }
+.title-btn.equip { background-color: #ebf8ff; color: #2b6cb0; }
+.title-btn.equipped { background-color: #319795; color: white; }
+
+.reset-btn {
+    width: 100%; margin-top: 30px; padding: 12px; background-color: #fff;
+    border: 1px solid #e2e8f0; color: #e53e3e; border-radius: 10px; font-weight: bold; cursor: pointer;
+}
+
+/* 하단 메뉴 바 */
+.bottom-menu {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 75px;
+    background-color: #ffffff; border-top: 1px solid #edf2f7;
+    display: flex; justify-content: space-around; align-items: center; padding-bottom: 10px;
+}
+.bottom-menu .tab-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    background: none; border: none; color: #a0aec0; cursor: pointer;
+    font-size: 0.7rem; font-weight: bold; width: 55px;
+}
+.bottom-menu .tab-btn .icon { font-size: 1.3rem; }
+.bottom-menu .tab-btn.active { color: #319795; }
+
+/* 애니메이션 */
+@keyframes jelly {
+    0%, 100% { transform: scale(1, 1); }
+    50% { transform: scale(1.03, 0.97); }
+}
+@keyframes feverGlow {
+    0% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); }
+    100% { box-shadow: 0 0 30px rgba(255, 69, 0, 0.9); }
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(3px); }
+    to { opacity: 1; transform: translateY(0); }
+}
